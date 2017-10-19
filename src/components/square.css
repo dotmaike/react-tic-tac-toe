@@ -1,0 +1,17 @@
+.square {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.square:after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}
+
+.content {
+  flex: none;
+  font-size: 9vw;
+  max-width: 50%;
+}

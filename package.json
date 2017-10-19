@@ -12,13 +12,12 @@
     "eslint": "4.9.0"
   },
   "devDependencies": {
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "eslint-config-prettier": "^2.6.0",
     "react-scripts": "^1.0.14"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "build": "react-scripts build"
   }
 }
