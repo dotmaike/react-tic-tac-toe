@@ -7,44 +7,10 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      history: [
-        {
-          squares: Array(9).fill(null)
-        }
-      ],
-      stepNumber: 0,
-      xIsNext: true
+      squares: [],
+      next: true
     };
-  }
-
-  handleClick = i => {
-    const history = this.state.history.slice(0, this.state.stepNumber + 1);
-    const current = history[history.length - 1];
-    const squares = current.squares.slice();
-    if (this.calculateWinner(squares) || squares[i]) {
-      return;
-    }
-    squares[i] = this.state.xIsNext ? "X" : "O";
-    this.setState({
-      history: history.concat([
-        {
-          squares: squares
-        }
-      ]),
-      stepNumber: history.length,
-      xIsNext: !this.state.xIsNext
-    });
-  };
-
-  jumpTo = step => {
-    this.setState({
-      stepNumber: step,
-      xIsNext: step % 2 === 0
-    });
-  };
-
-  calculateWinner = squares => {
-    const lines = [
+    this.lines = [
       [0, 1, 2],
       [3, 4, 5],
       [6, 7, 8],
@@ -54,41 +20,45 @@ class App extends Component {
       [0, 4, 8],
       [2, 4, 6]
     ];
-    for (let i = 0; i < lines.length; i++) {
-      const [a, b, c] = lines[i];
-      if (
-        squares[a] && squares[a] === squares[b] && squares[a] === squares[c]
-      ) {
-        return squares[a];
-      }
-    }
-    lines.map((line, i) => {
-      const [a, b, c] = lines[i];
-      if (
-        squares[a] && squares[a] === squares[b] && squares[a] === squares[c]
-      ) {
-        console.log(squares[a]);
+  }
+
+  handleClick = i => {
+    const squares = this.state.squares;
+    const player = this.state.next ? "X" : "O";
+    squares.push(player);
+    this.setState({
+      squares: squares,
+      next: !this.state.next
+    });
+  };
+
+  isWinner = squares => {
+    let winner = null;
+    this.lines.forEach((line, i) => {
+      const [a, b, c] = this.lines[i];
+      const success = (squares[b] === squares[a]) && (squares[c] === squares[a]);
+      if (success) {
+        winner = squares[a];
       }
     });
-    return null;
+    return winner;
   };
 
   render() {
-    const history = this.state.history;
-    const current = history[this.state.stepNumber];
-    const winner = this.calculateWinner(current.squares);
+    const squares = this.state.squares;
+    const winner = this.isWinner(squares);
 
     let status;
     if (winner) {
-      status = "Winner: " + winner;
+      status = "The Winner is: " + winner;
     } else {
-      status = "Next player: " + (this.state.xIsNext ? "X" : "O");
+      status = "Next player: " + (this.state.next ? "X" : "O");
     }
 
     return (
       <section>
-        <Board squares={current.squares} onClick={i => this.handleClick(i)} />
-        <div>{status}</div>
+        <div className={winner ? 'alert alert-success' : 'alert alert-info'}>{status}</div>
+        <Board squares={squares} onClick={i => this.handleClick(i)} />
       </section>
     );
   }

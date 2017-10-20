@@ -1,5 +1,6 @@
 import React from "react";
 import Square from "./Square";
+import './board.css';
 
 const Board = props => {
   function getSquareRows() {
